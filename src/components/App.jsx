@@ -1,56 +1,65 @@
-import React from 'react';
+import { useState } from 'react';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions.jsx';
 import { Statistics } from './Statistics/Statistics.jsx';
 import { Section } from './Section/Section.jsx';
 import { Notification } from './Notification/Notification.jsx';
 
-export class App extends React.Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const addFb = event => {
+    const type = event.target.name;
+    if (type === 'good') {
+      setGood(prevState => prevState + 1);
+    }
+    if (type === 'neutral') {
+      setNeutral(prevState => prevState + 1);
+    }
+    if (type === 'bad') {
+      setBad(prevState => prevState + 1);
+    }
   };
 
-  addFb = type => {
-    this.setState(prevState => ({ [type]: prevState[type] + 1 }));
-  };
-  countTotalFeedback = () => {
-    return (this.state.good + this.state.neutral + this.state.bad);
-  };
-  countPositiveFeedbackPercentage = () => {
-    const total = this.countTotalFeedback();
-    return (total > 0 ? (this.state.good / total) * 100 : 0).toFixed();
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
 
-  render() {
-    const totalFb = this.countTotalFeedback;
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-          flexDirection: 'column',
-        }}
-      >
-        <Section title="Please leave feedback">
-          <FeedbackOptions addFb={this.addFb} />
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
+    return (total > 0 ? (good / total) * 100 : 0).toFixed();
+  };
+
+  const totalFb = countTotalFeedback;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 40,
+        color: '#010101',
+        flexDirection: 'column',
+      }}
+    >
+      <Section title="Please leave feedback">
+        <FeedbackOptions addFb={addFb} />
+      </Section>
+
+      {totalFb() > 0 ? (
+        <Section title="Statistics">
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            countTotalFeedback={countTotalFeedback}
+            countPositiveFeedbackPercentage={countPositiveFeedbackPercentage}
+          />
         </Section>
-
-        {totalFb() > 0 ? (
-          <Section title="Statistics">
-            <Statistics
-              statData={this.state}
-              countTotalFeedback={this.countTotalFeedback}
-              countPositiveFeedbackPercentage={this.countPositiveFeedbackPercentage}
-            />
-          </Section>
-        ) : (
-          <Notification message="There is no feedback" />
-        )}
-      </div>
-    );
-  }
-}
+      ) : (
+        <Notification message="There is no feedback" />
+      )}
+    </div>
+  );
+};

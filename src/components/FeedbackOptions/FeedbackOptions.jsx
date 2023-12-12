@@ -1,44 +1,21 @@
-import React from 'react';
 import s from './FeedbackOptions.module.css';
 
-export class FeedbackOptions extends React.Component {
-  render() {
-    const { addFb } = this.props;
-
-    return (
-      <>
-        <div className={s.feedbackWrapper}>
-          <div className={s.feedbackButtons}>
-            <button
-              className="feedback"
-              name="goodFeedback"
-              onClick={() => {
-                addFb('good');
-              }}
-            >
-              Good
-            </button>
-            <button
-              className="feedback"
-              name="neutralFeedback"
-              onClick={() => {
-                addFb('neutral');
-              }}
-            >
-              Neutral
-            </button>
-            <button
-              className="feedback"
-              name="badFeedback"
-              onClick={() => {
-                addFb('bad');
-              }}
-            >
-              Bad
-            </button>
-          </div>
+export const FeedbackOptions = ({ addFb }) => {
+  return (
+    <>
+      <div className={s.feedbackWrapper}>
+        <div className={s.feedbackButtons}>
+          <button className="feedback" name="good" onClick={addFb}>
+            Good
+          </button>
+          <button className="feedback" name="neutral" onClick={addFb}>
+            Neutral
+          </button>
+          <button className="feedback" name="bad" onClick={addFb}>
+            Bad
+          </button>
         </div>
-      </>
-    );
-  }
-}
+      </div>
+    </>
+  );
+};
